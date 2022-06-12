@@ -15,7 +15,7 @@ const NewEntry = (props) => {
     const save_entry = () => {
         alert('you clicked the save entry button');
         
-        // props.on_new_entry_click
+        // props.on_new_entry_click();
     };
 
     return (
@@ -31,6 +31,7 @@ const NewEntry = (props) => {
                     id="category_selector"
                     aria-label="Category"
                     aria-describedby="category_selector_label"
+                    onChange={() => {}}
                 >
                     <option value="00"> ... </option>
                     {options}

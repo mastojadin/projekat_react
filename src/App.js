@@ -1,22 +1,25 @@
 import NewCategory from './NewCategory';
 import Overview from './Overview';
 import NewEntry from './NewEntry';
+import TableCategory from './TableCategory';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-function App() {
+const App = () => {
     const [categories, set_categories] = useState([]);
+    
     const [dates, set_dates] = useState({
         'from': '',
         'to': ''
     });
+    
     const [my_data, set_my_data] = useState([]);
 
-    const change_categories = categorie => {
-        set_categories(old_value => {
-            return old_value;
+    useEffect(() => {
+        my_ajax('http://projekat.test/category/list').then(data_from_server => {
+            set_categories(data_from_server.data);
         });
-    }
+    }, []);
 
     const change_set_dates = date => {
         set_dates(old_value => {
@@ -25,9 +28,55 @@ function App() {
     }
 
     const add_new_category = new_category => {
+        const my_form_data = new FormData();
+        my_form_data.append('new_category', new_category);
+        
+        const my_options = {
+            method: 'POST',
+            body: my_form_data
+        };
+        
+        my_ajax('http://projekat.test/category/add', my_options).then(data_from_server => {
+            set_categories(data_from_server.data);
+        });
+    }
+
+    const update_category = (id, name) => {
+        const my_form_data = new FormData();
+        my_form_data.append('id', id);
+        my_form_data.append('name', name);
+
+        const my_options = {
+            method: 'POST',
+            body: my_form_data
+        };
+
+        my_ajax('http://projekat.test/category/update', my_options).then(data_from_server => {
+            set_categories(data_from_server.data);
+        });
+    }
+
+    const delete_category = id => {
+        const my_form_data = new FormData();
+        my_form_data.append('id', id);
+
+        const my_options = {
+            method: 'POST',
+            body: my_form_data
+        };
+
+        my_ajax('http://projekat.test/category/delete', my_options).then(data_from_server => {
+            set_categories(data_from_server.data);
+        });
     }
 
     const add_new_data = new_data => {
+    }
+
+    const my_ajax = async (url, options = {method: 'GET'}) => {
+        const response = await fetch(url, options);
+        const from_server = await response.json();
+        return from_server;
     }
 
     return (
@@ -43,6 +92,7 @@ function App() {
                     <Overview
                         my_data_for_overview={my_data}
                         dates_for_overview={dates}
+                        change_dates_for_overview={change_set_dates}
                     />
                 </div>
                 
@@ -58,6 +108,13 @@ function App() {
                     <h3 className="text-center">New Category</h3>
                     <NewCategory
                         on_new_category_click={add_new_category}
+                    />
+                    <hr />
+                    <h3 className="text-center">Category table</h3>
+                    <TableCategory
+                        categories_for_table_categories={categories}
+                        on_update_category_click={update_category}
+                        on_delete_category_click={delete_category}
                     />
                 </div>
             </div>

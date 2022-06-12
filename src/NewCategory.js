@@ -1,8 +1,10 @@
 const NewCategory = (props) => {
     const save_cat = () => {
-        alert('You clicked save cat button');
-
-        // props.on_new_category_click
+        const category_input = document.getElementById('category_input');
+        
+        if (category_input.value.length > 3) {
+            props.on_new_category_click(category_input.value);
+        }
     }
     
     return (
@@ -12,6 +14,7 @@ const NewCategory = (props) => {
                 className="input-group-text"
                 id="category_input_label"
             >Category:</span>
+            
             <input
                 type="text"
                 id="category_input"
