@@ -19,6 +19,24 @@ const Overview = (props) => {
         </div>
 
         <div className="container"></div>
+
+        <hr />
+
+        <table className="table table-bordered">
+            <thead>
+               <tr>
+                    <th className="text-center">#</th>
+                    <th className="text-center">Cat</th>
+                    <th className="text-center">Amount</th>
+                    <th className="text-center">Date</th>
+                    <th className="text-center"></th>
+                    <th className="text-center"></th>
+                </tr>
+            </thead>
+            
+            <tbody>
+            </tbody>
+        </table>
         </>
     );
 }

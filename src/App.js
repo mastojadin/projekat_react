@@ -25,7 +25,7 @@ const App = () => {
         set_dates(old_value => {
             return old_value;
         });
-    }
+    };
 
     const add_new_category = new_category => {
         const my_form_data = new FormData();
@@ -39,7 +39,7 @@ const App = () => {
         my_ajax('http://projekat.test/category/add', my_options).then(data_from_server => {
             set_categories(data_from_server.data);
         });
-    }
+    };
 
     const update_category = (id, name) => {
         const my_form_data = new FormData();
@@ -54,7 +54,7 @@ const App = () => {
         my_ajax('http://projekat.test/category/update', my_options).then(data_from_server => {
             set_categories(data_from_server.data);
         });
-    }
+    };
 
     const delete_category = id => {
         const my_form_data = new FormData();
@@ -68,16 +68,59 @@ const App = () => {
         my_ajax('http://projekat.test/category/delete', my_options).then(data_from_server => {
             set_categories(data_from_server.data);
         });
-    }
+    };
 
-    const add_new_data = new_data => {
-    }
+    const add_my_data = (category_id, amount) => {
+        const my_form_data = new FormData();
+        my_form_data.append('category_id', category_id);
+        my_form_data.append('amount', amount);
+
+        const my_options = {
+            method: 'POST',
+            body: my_form_data
+        };
+
+        my_ajax('', my_options).then(data_from_server => {
+            set_my_data(data_from_server.data);
+        });
+    };
+
+    const edit_my_data = (my_data_id, category_id, amount, date) => {
+        const my_form_data = new FormData();
+        my_form_data.append('my_data_id', my_data_id);
+        my_form_data.append('category_id', category_id);
+        my_form_data.append('amount', amount);
+        my_form_data.append('date', date);
+
+        const my_options = {
+            method: 'POST',
+            body: my_form_data
+        };
+
+        my_ajax('', my_options).then(data_from_server => {
+            set_my_data(data_from_server.data);
+        });
+    };
+
+    const delete_my_data = (my_data_id) => {
+        const my_form_data = new FormData();
+        my_form_data.append('my_data_id', my_data_id);
+
+        const my_options = {
+            method: 'POST',
+            body: my_form_data
+        };
+
+        my_ajax('', my_options).then(data_from_server => {
+            set_my_data(data_from_server.data);
+        });
+    };
 
     const my_ajax = async (url, options = {method: 'GET'}) => {
         const response = await fetch(url, options);
         const from_server = await response.json();
         return from_server;
-    }
+    };
 
     return (
         <>
@@ -100,7 +143,7 @@ const App = () => {
                     <h3 className="text-center">New Entry</h3>
                     <NewEntry
                         categories_for_new_entry={categories}
-                        on_new_entry_click={add_new_data}
+                        on_new_entry_click={add_my_data}
                     />
                 </div>
                 

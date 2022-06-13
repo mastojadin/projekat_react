@@ -13,9 +13,11 @@ const NewEntry = (props) => {
     });
 
     const save_entry = () => {
-        alert('you clicked the save entry button');
-        
-        // props.on_new_entry_click();
+        const category_id = document.getElementById('category_selector').value;
+        const amount_all = document.getElementById('amount_input').value;
+        const amount = amount_all.replace(/\D/g, '');
+
+        props.on_new_entry_click(category_id, amount);
     };
 
     return (
