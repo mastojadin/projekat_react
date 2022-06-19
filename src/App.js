@@ -2,15 +2,17 @@ import NewCategory from './NewCategory';
 import Overview from './Overview';
 import NewEntry from './NewEntry';
 import TableCategory from './TableCategory';
+import MyChart from './MyChart';
 
 import { useState, useEffect } from 'react';
 
 const App = () => {
     const [categories, set_categories] = useState([]);
     
+    const tmp_date = new Date();
     const [dates, set_dates] = useState({
-        'from': '',
-        'to': ''
+        'from': new Date(tmp_date.getFullYear(), tmp_date.getMonth(), 1),
+        'to': new Date(tmp_date.getFullYear(), (tmp_date.getMonth() + 1), 0)
     });
     
     const [my_data, set_my_data] = useState([]);
@@ -19,12 +21,27 @@ const App = () => {
         my_ajax('http://projekat.test/category/list').then(data_from_server => {
             set_categories(data_from_server.data);
         });
+
+        my_ajax('http://projekat.test/my_data/list').then(data_from_server => {
+            set_my_data(data_from_server.data);
+        });
     }, []);
 
     const change_set_dates = date => {
-        set_dates(old_value => {
-            return old_value;
+        const my_form_data = new FormData();
+        my_form_data.append('date_from', date.from);
+        my_form_data.append('date_to', date.to);
+
+        const my_options = {
+            method: 'POST',
+            body: my_form_data
+        };
+
+        my_ajax('http://projekat.test/my_data/search', my_options).then(data_from_server => {
+            set_my_data(data_from_server.data);
         });
+
+        set_dates(date);
     };
 
     const add_new_category = new_category => {
@@ -80,7 +97,7 @@ const App = () => {
             body: my_form_data
         };
 
-        my_ajax('', my_options).then(data_from_server => {
+        my_ajax('http://projekat.test/my_data/add', my_options).then(data_from_server => {
             set_my_data(data_from_server.data);
         });
     };
@@ -97,7 +114,7 @@ const App = () => {
             body: my_form_data
         };
 
-        my_ajax('', my_options).then(data_from_server => {
+        my_ajax('http://projekat.test/my_data/update', my_options).then(data_from_server => {
             set_my_data(data_from_server.data);
         });
     };
@@ -111,7 +128,7 @@ const App = () => {
             body: my_form_data
         };
 
-        my_ajax('', my_options).then(data_from_server => {
+        my_ajax('http://projekat.test/my_data/delete', my_options).then(data_from_server => {
             set_my_data(data_from_server.data);
         });
     };
@@ -129,11 +146,18 @@ const App = () => {
         </div>
 
         <div className="container-fluid">
+            <div>
+                <MyChart
+                    my_data_for_my_chart={my_data}
+                />
+            </div>
+
             <div className="row">
                 <div className="col-md-4 border">
                     <h3 className="text-center">Overview</h3>
                     <Overview
                         my_data_for_overview={my_data}
+                        delete_my_data_for_overview={delete_my_data}
                         dates_for_overview={dates}
                         change_dates_for_overview={change_set_dates}
                     />

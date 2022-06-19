@@ -15,7 +15,7 @@ const NewEntry = (props) => {
     const save_entry = () => {
         const category_id = document.getElementById('category_selector').value;
         const amount_all = document.getElementById('amount_input').value;
-        const amount = amount_all.replace(/\D/g, '');
+        const amount = amount_all.replace(/[^0-9.]/g, '');
 
         props.on_new_entry_click(category_id, amount);
     };
@@ -47,6 +47,7 @@ const NewEntry = (props) => {
                 >Amount:</span>
                     
                 <input
+                    type="text"
                     className="form-control"
                     id="amount_input"
                     aria-label="Amount"
